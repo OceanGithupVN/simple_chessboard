@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <windows.h>
+#include <conio.h>
 using namespace std;
 char board[8][8]={
     {'R','N','B','Q','K','B','N','R'},
@@ -11,6 +12,36 @@ char board[8][8]={
     {'p','p','p','p','p','p','p','p'},
     {'r','n','b','q','k','b','n','r'}
 };
+void notfinished(){
+    system("cls");
+    cout<<"Dev-note:\n";
+    cout<<"logic system and promotion funcion are unfinished yet\n";
+    cout <<"press any key to continue...\n";
+    getch();
+}
+void introduction(){
+    system("cls");
+    cout<<"Introduction:\n";
+    cout<<"Chess is a two-player strategy board game played on an 8x8 grid.\n";
+    cout<<"The objective is to checkmate the opponent's king.\n";
+    cout<<"Each type of piece has its own movement rules.\n";
+    cout<<"The game starts with each player having 16 pieces:\n";
+    cout<<"1 King, 1 Queen, 2 Rooks, 2 Knights, 2 Bishops, and 8 Pawns.\n";
+    cout<<"Players take turns moving one piece at a time.\n";
+    cout<<"If a player's king is in check and cannot escape, it's checkmate!\n";
+    cout <<"press any key to continue...\n";
+    getch();
+}   
+void help(){
+    system("cls");
+    cout<<"Help:\n";
+    cout<<"1. Enter your move in the format 'e2 e4'.\n";
+    cout<<"2. The first part is the starting position, and the second part is the ending position.\n";
+    cout<<"3. Use lowercase letters for black pieces and uppercase for white pieces.\n";
+    cout<<"4. Type 'exit' to quit the game.\n";
+    cout <<"press any key to continue...\n";
+    getch();
+}
 int checkmate(){
     bool Kcheck=false;
     bool kcheck=false;
@@ -57,16 +88,13 @@ void display(){
     
 }
 
-signed main(){
-    int turn=0;
+void game(){
+    int turn=01;
     //system("color 0A");
-    cout<<"Welcome to Chess!\n";
-    cout<<"-------------------\n";
-    cout <<"press enter to start the game\n";
-    cin.get();
+    
     // main loop
     while (true){
-        turn++;
+        
         display();
         if (checkmate()==0) {
             if (turn%2==1) cout <<"White's turn(lower_bound):";
@@ -118,7 +146,7 @@ signed main(){
             val=false;
             cout<<"It's white's turn.\n";
             Sleep(2000);
-            turn--;
+            
             continue;
         }
         // black is upper_bound
@@ -127,13 +155,34 @@ signed main(){
             val=false;
             cout <<"It's black's turn.\n";
             Sleep(2000);
-            turn--;
+            
             continue;
         }
         if (val){
             board[endX][endY]=board[startX][startY];
             board[startX][startY]=' ';
+            turn++;
         }
 
     }
+}
+signed main(){
+    while (true){
+        system ("cls");
+        cout<<"Welcome to Chess!\n";
+        cout<<"-------------------\n";
+        cout <<"press 1 to start the game\n";
+        cout <<"press 2 for introduction\n";
+        cout <<"press 3 to get help\n";
+        cout <<"press 4 for dev-note\n";
+        cout <<"press 5 to quit\nYour choice: ";
+        int choice;
+        cin >>choice;
+        if (choice==1) game();
+        else if (choice==2) introduction();
+        else if (choice==3) help();
+        else if (choice==4) notfinished();
+        else if (choice==5) return 0;
+    }
+    return 0;
 }

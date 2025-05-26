@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <windows.h>
 #include <conio.h>
+#include <stack>
 using namespace std;
 char board[8][8]={
     {'R','N','B','Q','K','B','N','R'},
@@ -12,6 +13,17 @@ char board[8][8]={
     {'p','p','p','p','p','p','p','p'},
     {'r','n','b','q','k','b','n','r'}
 };
+stack<array<array<char, 8>, 8>> history;
+void copyBoard(char src[8][8], array<array<char, 8>, 8>& dest) {
+    for (int i = 0; i < 8; ++i)
+        for (int j = 0; j < 8; ++j)
+            dest[i][j] = src[i][j];
+}
+void restoreBoard(array<array<char, 8>, 8>& src, char dest[8][8]) {
+    for (int i = 0; i < 8; ++i)
+        for (int j = 0; j < 8; ++j)
+            dest[i][j] = src[i][j];
+}
 void notfinished(){
     system("cls");
     cout<<"Dev-note:\n";
@@ -42,6 +54,21 @@ void help(){
     cout <<"press any key to continue...\n";
     getch();
 }
+void promotion(){
+    if (board[0][0]=='P' || board[7][0]=='p'){
+        char choice;
+        cout<<"Promotion! Choose a piece (Q, R, B, N): ";
+        cin >>choice;
+        choice=toupper(choice);
+        if (choice=='Q' || choice=='R' || choice=='B' || choice=='N'){
+            if (board[0][0]=='P') board[0][0]=choice; // white pawn promotion
+            else if (board[7][0]=='p') board[7][0]=tolower(choice); // black pawn promotion
+        }
+        else {
+            cout<<"Invalid choice. Promotion failed.\n";
+        }
+    }
+}
 int checkmate(){
     bool Kcheck=false;
     bool kcheck=false;
@@ -65,6 +92,7 @@ int checkmate(){
         return 0; //game continue
     }
 }
+
 void display(){
     system("cls");
     cout<<"   a b c d e f g h\n";
@@ -89,7 +117,7 @@ void display(){
 }
 
 void game(){
-    int turn=01;
+    int turn=1;
     //system("color 0A");
     
     // main loop
@@ -102,14 +130,23 @@ void game(){
         }
         else if (checkmate()==1) {
             cout <<"White has win the game!";
+            Sleep(2000);
+            cout <<"\nPress any key to continue...\n";
+            getch();
             break;
         }
         else if (checkmate()==-1) {
             cout <<"Black has win the game!";
+            Sleep(2000);
+            cout <<"\nPress any key to continue...\n";
+            getch();
             break;
         }
         else {
             cout <<"Game over!";
+            Sleep(2000);
+            cout <<"\nPress any key to continue...\n";
+            getch();
             break;
         }
         cout <<turn;
@@ -123,6 +160,19 @@ void game(){
         getline(cin,move);
         bool val=true;
         if (move=="exit") break;
+        if (move=="undo") {
+            if (!history.empty()) {
+                restoreBoard(history.top(), board);
+                history.pop();
+                if (turn > 1) turn--;
+                cout << "Move undone.\n";
+                Sleep(1000);
+            } else {
+                cout << "No move to undo.\n";
+                Sleep(1000);
+            }
+            continue;
+        }
         if (move.length()!=5 || move[2]!=' ') {
             cout<<"Invalid move format. Please use 'e2 e4' format.\n";
             Sleep(2000);
@@ -159,10 +209,15 @@ void game(){
             continue;
         }
         if (val){
+            array<array<char, 8>, 8> backup;
+            copyBoard(board, backup);
+            history.push(backup); // Save current state before move
+
             board[endX][endY]=board[startX][startY];
             board[startX][startY]=' ';
             turn++;
         }
+        promotion();
 
     }
 }

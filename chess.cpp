@@ -14,6 +14,9 @@ char board[8][8]={
     {'r','n','b','q','k','b','n','r'}
 };
 stack<array<array<char, 8>, 8>> history;
+void setColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
 void copyBoard(char src[8][8], array<array<char, 8>, 8>& dest) {
     for (int i = 0; i < 8; ++i)
         for (int j = 0; j < 8; ++j)
@@ -31,6 +34,7 @@ void notfinished(){
     cout <<"press any key to continue...\n";
     getch();
 }
+
 void introduction(){
     system("cls");
     cout<<"Introduction:\n";
@@ -41,9 +45,10 @@ void introduction(){
     cout<<"1 King, 1 Queen, 2 Rooks, 2 Knights, 2 Bishops, and 8 Pawns.\n";
     cout<<"Players take turns moving one piece at a time.\n";
     cout<<"If a player's king is in check and cannot escape, it's checkmate!\n";
-    cout <<"press any key to continue...\n";
+    cout<<"press any key to continue...\n";
     getch();
 }   
+
 void help(){
     system("cls");
     cout<<"Help:\n";
@@ -51,7 +56,7 @@ void help(){
     cout<<"2. The first part is the starting position, and the second part is the ending position.\n";
     cout<<"3. Use lowercase letters for black pieces and uppercase for white pieces.\n";
     cout<<"4. Type 'exit' to quit the game.\n";
-    cout <<"press any key to continue...\n";
+    cout<<"press any key to continue...\n";
     getch();
 }
 void promotion(){
@@ -92,7 +97,7 @@ int checkmate(){
         return 0; //game continue
     }
 }
-
+/*
 void display(){
     system("cls");
     cout<<"   a b c d e f g h\n";
@@ -113,8 +118,39 @@ void display(){
         }
         cout<<"\n";
     }
-    
 }
+*/
+void display(){
+    system ("cls");
+    //     .  1 2 3 4 5 6 7 8
+        //    a b c d e f g h
+        //   ----------------
+        // 8| R N B Q K B N R
+        // 7| P P P P P P P P
+        // 6| ▓   ▓   ▓   ▓
+        // 5|   ▓   ▓   ▓   ▓
+        // 4| ▓   ▓   ▓   ▓
+        // 3|   ▓   ▓   ▓   ▓
+        // 2| p p p p p p p p
+        // 1| r n b q k b n r
+    
+    cout<<"   a b c d e f g h\n";
+    cout<<"  ----------------\n";
+    for(int i=0;i<8;i++){
+        cout<<8-i<<"| ";
+        for(int j=0;j<8;j++){
+            if ((i + j) % 2 == 0)
+                setColor(7);  // ô trắng
+            else
+                setColor(240);  // ô đen/xám 
+            cout <<board[i][j];
+            cout <<" ";
+        }
+        cout<<"\n";
+        setColor(7); // reset màu sau mỗi dòng
+    }
+}
+
 
 void game(){
     int turn=1;
@@ -149,12 +185,16 @@ void game(){
             getch();
             break;
         }
+
+        
         cout <<turn;
         if (turn%10==1) cout <<"st";
         else if (turn%10==2) cout <<"nd";
         else if (turn%10==3) cout <<"rd";
         else cout <<"th";
         cout << " turn\n";
+
+
         string move;
         cout<<"Enter your move (e.g., e2 e4): ";
         getline(cin,move);
@@ -232,7 +272,7 @@ signed main(){
         cout <<"press 4 for dev-note\n";
         cout <<"press 5 to quit\nYour choice: ";
         int choice;
-        cin >>choice;
+        choice=getch()-'0';
         if (choice==1) game();
         else if (choice==2) introduction();
         else if (choice==3) help();
